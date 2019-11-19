@@ -52,16 +52,18 @@ int insert_ficP(pacientes *primero);
 int read_fic(medicos **primero); 
 int read_ficP(pacientes **primero);
 
-/* 0 para medicos y 1 para pacientes */
+
+
 storage pedir_datos(int opc,medicos *primero, pacientes *primeroP); 
 
+/* Busque en la base de datos - booleanos: 0 para medicos y 1 para pacientes */
 int search_listM(medicos *primero,int dni);
 int search_listP(pacientes *primero,medicos *primeroM,int dni);
 
 int del_listP(pacientes **primero,int dni);
 int del_listM(medicos **primero,pacientes **primeroP,int dni);
 
-/* 0 para validar que no este en ninguna lista y 1 para comprobar que este en la lista medicos */
+/* Validación de DNI, 0 para validar que no este en ninguna lista y 1 para comprobar que este en la lista Médicos */
 bool val_dni(void *primero,int dni,bool opc); 
 
 void menu(void);
@@ -112,7 +114,10 @@ int main(){
                          break;
                    case 'c': case 'C':
                         printf("\n\t\tIntroduzca el dni del medico a buscar: ");
-                        while(getchar()!='\n'); // Lo que hago con esta sentencia es avanzar posiciones en studin sin llegar a tocar el salto de linea de este, de esa forma no habra un salto de linea en stdin y fgets funcionara correctamente.
+                        /* Lo que hago con esta sentencia es avanzar posiciones en studin sin llegar a tocar 
+                           el salto de linea de este, de esa forma no habra un salto de linea en stdin y fgets 
+                           funcionará correctamente. */
+                        while(getchar()!='\n'); 
                         fgets(tempnum,11,stdin);
                         if (tempnum[strlen(tempnum)-1] == '\n')
                            tempnum[strlen(tempnum)-1] = '\0';
@@ -185,8 +190,8 @@ int add_nodM(medicos **primero,storage info){
     medicos *nuevo,*aux;
     /* Convierto a un puntero que apunte a medicos, con (medicos *) por que el sizeof que yo realizo
     es un puntero, es decir yo hago un sizeof a un bloque de datos no a un dato simple por tanto para que
-    sizeof pueda averiguar el tamaño de ese bloque de datos tengo que tener la dirección de memoría (es decir 
-    un puntero de dicho bloque */
+    sizeof pueda averiguar el tamaño de ese bloque de datos tengo que tener la dirección de memória (es decir, 
+    un puntero de dicho bloque) */
     if((nuevo = (medicos *) malloc (sizeof(medicos))) == NULL){return 0;}
     
     if(nuevo == NULL){return 0;}
@@ -218,11 +223,11 @@ int add_nodM(medicos **primero,storage info){
              }
 }
 
-/* Tengo que hacer una indirección doble por que yo tengo que pasarle el valor a la función por referencia
-   para trabajar con la lista, pero primero resulta que ya es un puntero a una estructura (en este caso
-   un puntero a una lista) por lo que tengo que hacer una indirección multiple, es decir pasar la dirección de memoría
-   del puntero que apunta a la lista 
-*/
+/* Tengo que hacer una doble indirección por que yo que pasarle el valor a la función por referéncia
+para trabajar con la lista, pero primero resulta que ya es un puntero a una estructura (en este caso
+un puntero a una lista) por lo que tengo que hacer una indirecciín multiple, es decir pasar la dirección de memoría
+del puntero que apunta a la lista */
+
 
 int add_nodP(pacientes **primero,storage info){
  pacientes *nuevo,*aux;
@@ -262,7 +267,7 @@ int add_nodP(pacientes **primero,storage info){
 int see_listM(void *primero){
       medicos *auxiliar;
       
-      /* Esto es un ejemplo de como usar la conversion de punteros void */
+      /* Esto es un ejemplo de como usar la conversion de punteros 'void' */
       auxiliar = (medicos *)primero;
       if (auxiliar == NULL) {printf( "\t\tLa lista esta vacia!!\n" ); return 0; }
       while (auxiliar!=NULL) {
@@ -274,7 +279,6 @@ int see_listM(void *primero){
 int see_listP(pacientes *primero){
       pacientes *auxiliar;
       
-      /* Esto es un ejemplo de como usar la conversion de punteros void */ 
       auxiliar = primero;
       if (auxiliar == NULL) {printf("\t\tLa lista esta vacia!!\n" ); return 0; }
       while (auxiliar!=NULL) {
@@ -297,8 +301,9 @@ int insert_fic(medicos *primero){
   /* fseek lo que hace es escribir al final de fichero, 
   lo puedo quitar para que el fichero se sobreescriba 
   para usar fseek de esta forma no debo usar en fread
-  en la condicion del bucle cuando aux.next != NULL */
- // fseek (fp, 0L, SEEK_END); 
+  en la condicion del bucle cuando aux.next != NULL 
+  fseek (fp, 0L, SEEK_END); 
+  */
 
   b = fwrite(&aux,sizeof(medicos),1,fp);
   if(b < 1){printf("error"); return 0;}
@@ -353,7 +358,7 @@ int read_ficP(pacientes **primero){
  if((fp = fopen("clinicaP.bin","r+b")) == NULL) {printf("Error al abrir el archivo"); return 0;}
  fseek (fp, 0L, SEEK_SET);
 
- /* Es mejor usar este fragmento, ya que en caso de fallo de fread, hay menos posibilidades de que se
+ /* Es mejor usar este fragmento, ya que en caso de fallo de la función: fread hay menos posibilidades de que se
  produzca fallo de segmentación */
  
   while(1){ 
@@ -378,7 +383,7 @@ storage pedir_datos(int opc,medicos *primero, pacientes *primeroP){
           fgets(temp,11,stdin);
           if (temp[strlen(temp)-1] == '\n')
            temp[strlen(temp)-1] = '\0';
-           sscanf(temp,"%d",&numeros); /* lo uso para convertir cadena de texto en un entero */
+           sscanf(temp,"%d",&numeros); // lo uso para convertir cadena de texto en un entero
            if(!temp[1]){ printf("\nEl campo DNI no puede dejarse vacio. Pulse Enter para continuar.\n"); getchar(); }
            if(val_dni(primero,numeros,0) == 1 || val_dni(primeroP,numeros,1) == 1 ){printf("\nEl dni introducido ya existe.\n\n");}
           }while(!temp[1] || val_dni(primero,numeros,0) == 1 || val_dni(primeroP,numeros,1) == 1);
@@ -465,8 +470,10 @@ bool val_dni(void *primero,int dni,bool opc){
     pacientes *auxP;
     int m = 0;
     int p = 0;
-    /* 0 para medicos, 1 para pacientes.
-       0 si no existe, 1 si existe.   
+
+    /* Para la validación uso los siguientes valores booleanos:
+       0 para medicos, 1 para pacientes.
+       0 si, NO existe, 1 si, SI existe.   
     */
     
     if(opc == 1){
@@ -513,8 +520,8 @@ int del_listM(medicos **primero,pacientes **primeroP,int dni){
       medicos *aux,*ant;
       pacientes *auxP,*antP;
       
-      /* ¿Y si el dni introducido no existe? */
-      if(val_dni(*(primero),dni,0) == 0 || primero == NULL) // Para desferenciar un puntero uso *(puntero), preguntar.
+      /* Si el DNI introducido no existe: */
+      if(val_dni(*(primero),dni,0) == 0 || primero == NULL) /* Para desreferenciar un puntero uso: *(puntero) */
          return 0;
       
       ant = *primero;
@@ -573,3 +580,4 @@ void menu(void){
       
       printf("\n\t\tElija una opcion: ");
      }
+
