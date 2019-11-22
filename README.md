@@ -1,6 +1,6 @@
 # ArxivLogicAutomation
 
-Soy Cribktep, por causas personales tuve que abandonar las ciencias lógicas, matemáticas e informáticasunos unos años de mi vida,
+Soy Cribktep, por causas personales tuve que abandonar las ciencias lógicas, matemáticas e informáticas unos años de mi vida,
 pero ahora vuelvo a estar en activo y con más ganas que nunca de volver a ellas, compartir, ayudar, aprender y conocer más y más de ellas.
 
 En este repositorio iré dejando diseños, programas, algoritmos, que he ido generando en estos años, para compartir con la comunidad
